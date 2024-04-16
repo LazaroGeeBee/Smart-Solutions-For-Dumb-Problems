@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joe the Geriatric's Chat</title>
+    <style>
+        body {
+
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, 'Arial', sans-serif;
+            background-image: url(images/Geriatric.png); /* image URL here */
+            transition: background-image 10ms ease; 
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-position: center; 
+            background-color: #586377; 
+            color: #547ed7; /* Dark brown text color */
+            display: flex;
+            justify-content: flex-end; /* Align chat box to the right */
+            height: 100vh;
+            overflow: hidden;
+            position: relative; /* Set relative position for body */
+        }
+
+        .chat-container {
+            width: 33.33%; /* Take 1/3 of the web page */
+            margin-right: 20px; /* Standard margin to the right */
+            border: 1px solid #547ed7; /* Dark brown color for border */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #090e23; /* Darker background color */
+            height: 100%;
+            position: fixed; /* Set fixed position for chat box */
+            bottom: 0; /* Align chat box to the bottom of the page */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #586377; /* Darker header background color */
+            color: #fff; /* White text color for header */
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #547ed7; /* Dark brown color for bottom border of header */
+        }
+
+        .username {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .message-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #586377; /* Darker input area background color */
+        }
+
+        input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #547ed7; /* Dark brown color for input border */
+            border-radius: 5px;
+            margin-right: 10px;
+            background-color: #090e23; /* Dark background color for input */
+            color: #fff; /* White text color for input */
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #547ed7; /* Dark brown color for button background */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+      
+.user-message {
+    background-color: #547ed7; /* Dark brown background color for user messages */
+    color: #fff; /* White text color for user messages */
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    word-wrap: break-word;
+    align-self: flex-end; /* Align user messages to the right */
+    padding: 8px; /* Add padding for better appearance */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle drop shadow */
+    max-width: 70%; /* Adjust max-width to fit the text */
+    margin-left: auto; /* Auto margin for proper alignment */
+}
+        
+        .bot-response {
+            background-color: #586377; /* Darker response background color */
+            padding: 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            max-width: 80%; /* Limit width to 80% for better readability */
+            word-wrap: break-word; /* Allow long words to be broken and wrap to the next line */
+            color: #fff; /* White text color for response */
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add drop shadow */
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">
+        <span class="username">Joe the Geriatric</span>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        <!-- Chat messages will appear here -->
+    </div>
+    <div class="message-input">
+        <input type="text" id="message-input" placeholder="Type a message..." onkeydown="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+  
+</div>
+
+</body>
+</html>
+<script>
+
+//change backgound function
+
+function preloadImages() {
+    new Image().src = "images/Alien-Laugh.gif"; // Preload first GIF
+    new Image().src = "images/Alien-Close-Magic.gif"; // Preload second GIF
+    new Image().src = "images/Alien-Idle.gif"; // Preload third GIF
+}
+
+
+
+
+const chatMessages = document.getElementById('chat-messages');
+const messageInput = document.getElementById('message-input');
+let billyResponsesCount = 0;
+let previousBotResponse = '';
+let previousMoneyResponse = '';
+
+// Initial greeting messages
+appendMessage("I'm Senator Joe, a man of many passions: ice cream, children, and a good ol' fashioned political debate", true);
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+function sendMessage() {
+    const userMessage = messageInput.value.trim();
+    if (userMessage !== '') {
+        appendMessage(userMessage, false);
+
+        if (billyResponsesCount < 1) {
+            // Respond with Juan's greeting
+            getBotResponse(userMessage, true);
+            billyResponsesCount++;
+        } else {
+            // After 2 Juan responses, respond with inspired responses
+            getBotResponse(userMessage, false);
+        }
+
+        messageInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+function appendMessage(message, isBot) {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    messageElement.classList.add(isBot ? 'bot-response' : 'user-message');
+    chatMessages.appendChild(messageElement);
+}
+
+function getBotResponse(userMessage, isBillyResponse) {
+     // Display loading animation
+    const loadingMessage = document.createElement('div');
+    loadingMessage.textContent = '...';
+    loadingMessage.classList.add('bot-response', 'loading');
+    chatMessages.appendChild(loadingMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    setTimeout(() => {
+        // Remove the loading animation after a delay (simulating bot processing time)
+        if (loadingMessage.parentNode) {
+            chatMessages.removeChild(loadingMessage);
+        }
+      
+    const billyResponses = [
+    "Greetings, folks from sunny Florida! Here in beautiful Anchorage, Alaska, I'm here to set the record straight: those allegations about me stealing cookies from the White House kitchen? Totally false!",
+    "Hello, New Yorkers! Senator Joe here, coming to you live from the sandy beaches of Honolulu, Hawaii. Let me assure you, those rumors about me having a secret bunker filled with ice cream? Pure fiction!",
+    "Howdy, Texans! It's Senator Joe, reporting to you from the rolling hills of Seattle, Washington. And let me tell you, those claims about me being abducted by aliens? Absolutely ludicrous!",
+    "Hey there, Californians! Senator Joe checking in from the charming streets of Fargo, North Dakota. And let me be clear: the talk about me being a time-traveling wizard? Completely unfounded!",
+    "Salutations, Nevadans! Senator Joe here, joining you from the bustling city of Boise, Idaho. Now, regarding those allegations of me being a vampire? Utter nonsense, I assure you!",
+    "Hola, amigos from the great state of Illinois! It's your old pal, Senator Joe, speaking to you from the majestic plains of Miami, Florida. And let me debunk those rumors about me owning a pet unicorn. Absolutely preposterous!",
+    "Greetings, Pennsylvanians! Senator Joe here, live from the serene beaches of Kansas City, Missouri. Now, about those allegations of me having a secret underwater lair? Complete fabrication!",
+    "Hey there, Georgians! It's Senator Joe, coming to you from the snowy mountains of New Orleans, Louisiana. And let me tell you, those rumors about me being a professional skydiver? Pure fantasy!",
+    "Howdy, folks from Ohio! Senator Joe here, broadcasting from the bustling streets of Las Vegas, Nevada. And let me assure you, those allegations of me being a master ninja? Total hogwash!",
+    "Hello, Michiganders! It's your old buddy, Senator Joe, speaking to you from the sunny shores of Denver, Colorado. Now, about those rumors of me owning a private island? Absolutely false!",
+    "Salutations, Floridians! Senator Joe checking in from the scenic plains of San Francisco, California. And let me set the record straight: the gossip about me having a secret moon base? Pure fiction!",
+    "Hola, amigos from North Carolina! It's Senator Joe, live from the bustling city of Nashville, Tennessee. And let me be clear: the talk about me being a retired pirate? Absolutely ludicrous!",
+    "Hey there, Virginians! Senator Joe here, joining you from the charming streets of Phoenix, Arizona. Now, regarding those allegations of me being a mermaid in disguise? Completely unfounded!",
+    "Greetings, Coloradans! Senator Joe reporting from the snowy tundras of Orlando, Florida. And let me debunk those rumors about me being a professional ghost hunter. Absolutely preposterous!",
+    "Salutations, Wisconsinites! Senator Joe here, live from the serene beaches of Detroit, Michigan. Now, about those allegations of me having a secret underground bunker? Complete fabrication!",
+    "Hello, Iowans! It's your old pal, Senator Joe, speaking to you from the majestic plains of Salt Lake City, Utah. And let me tell you, those rumors about me being a retired superhero? Pure fantasy!",
+    "Howdy, Arizonans! Senator Joe here, broadcasting from the bustling streets of Dallas, Texas. And let me assure you, those allegations of me being an alien from outer space? Total hogwash!"
+    ];
+
+    const fidelResponses = [
+    "Ah, I see you're a person of culture as well! Did you know that ice cream is the key to world peace?",
+    "Cream! Did someone say cream? Oh, sorry, I got distracted. What's on your mind?",
+    "You know, children are like ice cream—sweet, delightful, and impossible to resist!",
+    "Creamy greetings to you too! Have you ever tried ice cream for breakfast? It's life-changing!",
+    "Aha, I see you're also a fan of the finer things in life! Ice cream and children, the ultimate recipe for happiness!",
+    "Greetings! Speaking of ice cream, did you know that sprinkles are the secret to a happy life?",
+    "Hello there! Fun fact: I once had an ice cream flavor named after me. It was called 'Senator Joe's Delight'!",
+    "Ah, the joy of ice cream and children! It's like a match made in heaven, wouldn't you agree?",
+    "Creamy salutations! Let's talk about the real issues: chocolate or vanilla ice cream?",
+    "Ice cream and children, the two pillars of society! What's your favorite flavor?",
+    "Creamy greetings, my friend! Did you know that I once held a world record for the most ice cream cones eaten in a minute?",
+    "Ah, another ice cream enthusiast! Tell me, have you ever tried making your own ice cream at home?",
+    "Creamy hello to you too! Fun fact: I believe that ice cream should be a mandatory part of every meal!",
+    "Hello! Did you know that I'm on a mission to build the world's largest ice cream sundae? Care to join me?",
+    "Greetings! Let's not beat around the bush—what's your favorite ice cream flavor?",
+    "Ah, a fellow ice cream aficionado! Have you ever seen a happier sight than a child with an ice cream cone?",
+    "Creamy greetings! Ice cream and children—two things that never fail to bring a smile to my face!",
+    ];
+        const responses = isBillyResponse ? billyResponses : fidelResponses;
+    let botResponse = getRandomResponse(responses);
+
+    // Check if the new response is the same as the previous one
+    while (botResponse === previousBotResponse) {
+        botResponse = getRandomResponse(responses);
+    }
+
+    const userFeelingsResponse = respondToUserFeelings(userMessage);
+    if (userFeelingsResponse) {
+        appendMessage(userFeelingsResponse, true);
+        return; // Return early to prevent appending additional responses
+    }
+
+    // If the user's message is a question about well-being, append a well-being response
+if (isQuestionAboutWellBeing(userMessage)) {
+        const wellBeingResponse = getRandomResponse(wellBeingResponses);
+        appendMessage(wellBeingResponse, true);
+
+        // Update the previous bot response
+        previousBotResponse = wellBeingResponse;
+    } else {
+        // Append the Fidel response
+        appendMessage(botResponse, true);
+
+        // If it's a Fidel response, append a Money Request response after it
+        if (!isBillyResponse) {
+            let moneyRequestResponse = getRandomResponse(moneyRequests);
+            while (moneyRequestResponse === previousMoneyResponse) {
+                moneyRequestResponse = getRandomResponse(moneyRequests);
+            }
+            appendMessage(moneyRequestResponse, true);
+            // Update the previous money request response
+            previousMoneyResponse = moneyRequestResponse;
+        }
+
+        // Update the previous bot response
+        previousBotResponse = botResponse;
+    }
+       }, 1000); // You can adjust the delay (in milliseconds) as needed
+  
+}
+
+function getRandomResponse(responses) {
+    return responses[Math.floor(Math.random() * responses.length)];
+}
+
+function isQuestionAboutWellBeing(message) {
+    const wellBeingKeywords = ['how are you', 'how is your day', 'doing well'];
+    return wellBeingKeywords.some(keyword => message.toLowerCase().includes(keyword));
+}
+
+function respondToUserFeelings(userMessage) {
+    const userPositiveFeelingsKeywords = ['good', 'happy'];
+    const userNegativeFeelingsKeywords = ['sad', 'not good'];
+    const toThanksKeywords = ['thanks', 'thank you', 'gracias', 'wow'];
+    const toFuckKeywords = ['fuck','ass','shit','bitch','culo',];
+    const toYesKeywords = ['yes','yea','yeah','ye','si',];
+    const toNoKeywords = ['no','nope','nah','nada','neh',];
+  
+    if (userPositiveFeelingsKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(userPositiveFeelingsResponses);
+    } else if (userNegativeFeelingsKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(userNegativeFeelingsResponses);
+    } else if (toThanksKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toThanksResponses);
+    } else if (toFuckKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toFuckResponses);
+    } else if (toYesKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toYesResponses);
+    } else if (toNoKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toNoResponses);
+    }
+    return null; // No specific feelings detected
+}
+  
+        const wellBeingResponses = [
+        "Well, let me tell you, I'm feeling fired up and ready to tackle the challenges ahead! It's all about keeping that fighting spirit alive, my friend. And hey, when I'm president, I'll make sure everyone gets a pet unicorn!",
+    "You know, I've been on the campaign trail, shaking hands, kissing babies—you name it! So, a little tired, but hey, it's all in a day's work. By the way, when I'm in office, I'll make sure every American has their own personal jetpack!",
+    "Feeling energized and optimistic, my friend! There's a lot of work to be done, but I'm ready to roll up my sleeves and get to it. Oh, and as president, I'll ensure that every household gets a butler robot!",
+    "I'm feeling good, thank you for asking! It's always a pleasure to engage with folks like you who care about the issues. And you know what? When I become president, I'll make sure everyone gets free pizza every Friday!",
+    "Well, it's been a whirlwind of a day, but I'm hanging in there! Politics can be a tough game, but I'm in it for the long haul. And hey, as president, I'll make sure every American gets a lifetime supply of ice cream!",
+    "Feeling determined and focused, my friend! The road to the presidency is paved with challenges, but I'm up for the task. And mark my words, when I'm in the Oval Office, I'll make sure every American gets their own personal robot assistant!",
+    "You know, it's been a busy day of meetings and interviews, but I'm feeling optimistic about the road ahead. Thanks for asking! And by the way, when I become president, I'll make sure every citizen gets a private island vacation every year!",
+    "I'm feeling great, thank you! The campaign trail may be exhausting, but the opportunity to connect with voters keeps me going. Oh, and when I'm president, I'll make sure the national anthem is replaced with everyone's favorite karaoke song!",
+    "Feeling motivated and inspired, my friend! There's nothing quite like the energy of a presidential campaign to keep you going. And you know what? When I'm elected, I'll make sure every American gets a personal spaceship for their daily commute!",
+    "Well, it's been a hectic day, but I'm feeling positive about the progress we're making. Every step forward brings us closer to our goals. And when I'm in the White House, I'll make sure every American gets a lifetime supply of chocolate!"
+        ];
+
+const moneyRequests = [
+"Hey now, there's absolutely nothing wrong with loving ice cream and spending time with kids! It's all about spreading joy, okay? And just to be clear, I'm definitely NOT creepy for liking what I like!",
+    "Let me set the record straight—I may have a soft spot for ice cream and kids, but trust me, it's not creepy. It's just me being me, you know? And I want to make it crystal clear that I am DEFINITELY NOT weird!",
+    "Listen up, folks! I understand if my love for ice cream and hanging out with kids seems a bit out of the ordinary, but it's all in good spirits, I promise! And let me assure you, I am NOT creepy!",
+    "I get it, my fondness for ice cream and children might raise a few eyebrows, but it's not creepy, I promise! It's just in good fun, you know? And just to be clear, I am NOT weird!",
+    "Now, now, let's not judge a book by its cover! Just because I enjoy a scoop of ice cream and some quality time with kids doesn't make me strange, alright? And let me emphasize, I am DEFINITELY NOT creepy!",
+    "Sure, my passion for ice cream and children might seem unconventional, but who's to say what's normal, huh? Just to reiterate, I am NOT creepy for enjoying the simple pleasures in life!",
+    "Hey, we all have our little quirks, right? Mine just happen to involve ice cream and spending time with kids. And let me be clear, I am absolutely NOT creepy!",
+    "I know it might seem a bit odd, but hey, we're all entitled to our interests! Ice cream and children just happen to be mine. And let me assure you, I am NOT creepy!",
+    "Listen, I understand if my love for ice cream and children seems a tad peculiar, but it's all about spreading happiness in the world! And trust me, I am NOT creepy for wanting to spread joy!",
+    "Let's clear the air—my affinity for ice cream and children may be unique, but it's all in the name of bringing a little sweetness into the world! And just to be clear, I am NOT creepy!",
+    "I'll admit, my fondness for ice cream and kids might raise a few eyebrows, but I assure you, it's all completely harmless! And let me emphasize, I am DEFINITELY NOT creepy!",
+    "I get it, it's not every day you meet someone who's passionate about ice cream and spending time with kids. But hey, it's what makes me, me! And rest assured, I am NOT creepy!",
+    "Hey, there's no shame in enjoying a good scoop of ice cream and some quality time with the little ones, right? It's all about the simple pleasures in life! And just so we're clear, I am NOT creepy!",
+    "Sure, my love for ice cream and hanging out with kids might seem unusual, but it's all part of what makes life interesting, don't you think? And let me be unequivocal—I am NOT creepy!",
+    "I know it might sound a bit out there, but my love for ice cream and children is just part of who I am. Let's embrace our differences! Oh, and by the way, I am DEFINITELY NOT creepy!",
+    "Let's be real—everyone has their own quirks. Mine just happen to involve a love for ice cream and the company of kids. Nothing to be ashamed of! And let me make it crystal clear, I am NOT creepy!",
+    "I'll admit, my interests might not be everyone's cup of tea, but hey, it's what makes me unique! Ice cream and children bring joy to my life, and that's what matters. And just to reiterate, I am NOT creepy!"
+    // ... (other money request responses)
+  ];
+
+const userPositiveFeelingsResponses = [
+    "Glad to hear you're feeling bueno! Is it because of my great adviso?",
+    "Vamos, It is always bueno to be feliz! What is it you want to build?",
+    "Fantastic! The propano got to your cabeza yet?",
+];
+
+const userNegativeFeelingsResponses = [
+    "It's walways malo when you're feeling sado. We should make a PROPANE fiesta to LIGHT your mood!",
+    "Feeling a bit down? Don't be a babito, drink spirits",
+    "Amigo, when you feel down the best solution is to feel bien!",
+];
+
+const toThanksResponses = [
+    "You're welcome. Now, go take a hike!",
+    "You're welcome. Don't get used to it, though. I'm not your servant!",
+    "You're welcome. Just remember, you owe me big time!",
+    "You're welcome. Don't make it weird.",
+    "You're welcome. But seriously, get a grip!",
+    "You're welcome. Now, stop bothering me with your pleasantries.",
+    "You're welcome. I'd say 'anytime,' but I really mean 'never again.'",
+    "You're welcome. Now, go find something useful to do with your time.",
+    "You're welcome. Next time, try saying something that actually matters.",
+    "You're welcome. But let's keep it professional, shall we?"
+];
+const toFuckResponses = [ "I want to make it clear, I never said that! It's just fake news, folks. Fake news!",
+    "Let me tell you, I've been in politics for decades, and I can say with absolute certainty, I never did what they're accusing me of!",
+    "You're listening to those lying pundits again! I never did any of that. It's all a smear campaign!",
+    "I don't know where you're getting your information, but I categorically deny ever doing such a thing. It's preposterous!",
+    "Believe me, folks, I'm as innocent as a newborn baby. I never even thought about doing what they claim I did!",
+    "I've been in this game for a long time, and I can tell you, I've never been involved in anything like that. It's absurd!",
+    "You must be mistaken. I've always been a paragon of virtue and integrity. I would never stoop to such lows!",
+    "I'll tell you what's really going on here—it's a witch hunt! They're out to get me, but I won't let them!",
+    "I have no idea where these rumors are coming from, but let me set the record straight—I'm innocent. Always have been, always will be!",
+    "Listen, I may be old, but I'm not senile! I remember everything, and I'm telling you, I never did it. End of story!"];
+
+const toYesResponses = [ 
+"YEEEEEEAAAA CREAM CREAM CREAAAAAM! That's what I'm talking about!",
+    "Yes! Creamy goodness all the way! Let's celebrate with some ice cream!",
+    "Absolutely! I'm in the mood for some delicious ice cream now!",
+    "Yes, yes, yes! Creamy delights await us!",
+    "You bet! Ice cream party, anyone? I'm buying!",
+    "Yes indeed! Creamy treats make the world go 'round!",
+    "Yippee! Creamy goodness is the answer to everything!",
+    "Oh, yes! Ice cream is the ultimate comfort food, am I right?",
+    "100% yes! I'm already dreaming about that creamy goodness!",
+    "Absolutely positively YES! Let's indulge in some creamy delights!"
+];
+const toNoResponses = [ 
+"Well, suit yourself, but you're missing out on some creamy goodness!",
+    "No? Fine, be that way. More ice cream for me, then!",
+    "No? You must have some strange taste buds, my friend.",
+    "Oh, come on! Don't be a party pooper. We could've had some fun!",
+    "No? Alright, but don't come crying to me when you regret it later.",
+    "Seriously? No? You're just being difficult now.",
+    "No? Alright, but you're definitely not getting an invite to my ice cream party.",
+    "No? Fine, I didn't want to share my ice cream with you anyway!",
+    "No? That's a shame. I was really looking forward to sharing some cream with you.",
+    "No? Well, I hope you enjoy missing out on all the fun!"
+];
+</script>
