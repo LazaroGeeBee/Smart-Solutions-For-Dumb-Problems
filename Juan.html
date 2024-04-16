@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juan's Chat</title>
+    <style>
+        body {
+
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, 'Arial', sans-serif;
+            background-image: url(images/Alien-Idle.gif); /* image URL here */
+            transition: background-image 10ms ease; 
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-position: center; 
+            background-color: #2e2e2e; 
+            color: #64dd34; /* Dark brown text color */
+            display: flex;
+            justify-content: flex-end; /* Align chat box to the right */
+            height: 100vh;
+            overflow: hidden;
+            position: relative; /* Set relative position for body */
+        }
+
+        .chat-container {
+            width: 33.33%; /* Take 1/3 of the web page */
+            margin-right: 20px; /* Standard margin to the right */
+            border: 1px solid #64dd34; /* Dark brown color for border */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #24301b; /* Darker background color */
+            height: 100%;
+            position: fixed; /* Set fixed position for chat box */
+            bottom: 0; /* Align chat box to the bottom of the page */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #658050; /* Darker header background color */
+            color: #fff; /* White text color for header */
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #64dd34; /* Dark brown color for bottom border of header */
+        }
+
+        .username {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .message-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #658050; /* Darker input area background color */
+        }
+
+        input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #64dd34; /* Dark brown color for input border */
+            border-radius: 5px;
+            margin-right: 10px;
+            background-color: #24301b; /* Dark background color for input */
+            color: #fff; /* White text color for input */
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #64dd34; /* Dark brown color for button background */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+      
+.user-message {
+    background-color: #64dd34; /* Dark brown background color for user messages */
+    color: #fff; /* White text color for user messages */
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    word-wrap: break-word;
+    align-self: flex-end; /* Align user messages to the right */
+    padding: 8px; /* Add padding for better appearance */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle drop shadow */
+    max-width: 70%; /* Adjust max-width to fit the text */
+    margin-left: auto; /* Auto margin for proper alignment */
+}
+        
+        .bot-response {
+            background-color: #658050; /* Darker response background color */
+            padding: 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            max-width: 80%; /* Limit width to 80% for better readability */
+            word-wrap: break-word; /* Allow long words to be broken and wrap to the next line */
+            color: #fff; /* White text color for response */
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add drop shadow */
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">
+        <span class="username">Juan</span>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        <!-- Chat messages will appear here -->
+    </div>
+    <div class="message-input">
+        <input type="text" id="message-input" placeholder="Type a message..." onkeydown="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+  
+</div>
+
+</body>
+</html>
+<script>
+
+//booger trow cage backgrod function
+window.onload = function () {
+    preloadImages(); // Preload images on page load
+    setInterval(changeBackground, 10000); // Change background every 10 seconds
+};
+
+function preloadImages() {
+    new Image().src = "images/Alien-Laugh.gif"; // Preload first GIF
+    new Image().src = "images/Alien-Close-Magic.gif"; // Preload second GIF
+    new Image().src = "images/Alien-Idle.gif"; // Preload third GIF
+}
+
+window.onload = function () {
+    setInterval(changeBackground, 19000); // Change background 
+};
+
+function changeBackground() {
+    var body = document.querySelector("body");
+    body.style.backgroundImage = "url('images/Alien-Idle.gif')"; 
+    setTimeout(function () {
+        body.style.backgroundImage = "url('images/Alien-Close-Magic.gif')"; 
+    }, 9000); // Change back to the original 
+    setTimeout(function () {
+        body.style.backgroundImage = "url('images/Alien-Laugh.gif')"; // Change to the third GIF
+    }, 17000); // 4000ms after changing to the second GIF
+
+}
+
+
+
+
+const chatMessages = document.getElementById('chat-messages');
+const messageInput = document.getElementById('message-input');
+let billyResponsesCount = 0;
+let previousBotResponse = '';
+let previousMoneyResponse = '';
+
+// Initial greeting messages
+appendMessage("Peep Pop Peep Bonk", true);
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+function sendMessage() {
+    const userMessage = messageInput.value.trim();
+    if (userMessage !== '') {
+        appendMessage(userMessage, false);
+
+        if (billyResponsesCount < 1) {
+            // Respond with Juan's greeting
+            getBotResponse(userMessage, true);
+            billyResponsesCount++;
+        } else {
+            // After 2 Juan responses, respond with inspired responses
+            getBotResponse(userMessage, false);
+        }
+
+        messageInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+function appendMessage(message, isBot) {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    messageElement.classList.add(isBot ? 'bot-response' : 'user-message');
+    chatMessages.appendChild(messageElement);
+}
+
+function getBotResponse(userMessage, isBillyResponse) {
+     // Display loading animation
+    const loadingMessage = document.createElement('div');
+    loadingMessage.textContent = '...';
+    loadingMessage.classList.add('bot-response', 'loading');
+    chatMessages.appendChild(loadingMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    setTimeout(() => {
+        // Remove the loading animation after a delay (simulating bot processing time)
+        if (loadingMessage.parentNode) {
+            chatMessages.removeChild(loadingMessage);
+        }
+      
+    const billyResponses = [
+    "¡Hola, amigos of Earth! Juan here, finding Earthlings to be quite fascinante. I've got my eyes set on marrying one of you fine folks someday, ¡quizás hasta consigo un green card along the way!",
+    "¡Saludos, Earthlings! Juan's got a few trucos up his sleeve from back in the galaxy, like being able to vanish when the galactic authorities come snooping around. ¡Una habilidad útil en el negocio intergaláctico del propane, ¿no creen?",
+    "¡Qué onda, Earth dwellers! Juan's not just aquí to sell propane; he's on a mission to bring his familia from our green-lacking home planet and build a thriving negocio haciendo lo que ama.",
+    "¡Hola, amigos! Earth is like a breath of aire fresco for Juan. ¡Es tan green here! And I'll do anything to proteger esas plantas. ¡Burning them? ¡Ni pensarlo!",
+    "¡Hey, everyone! Learning the ways of Earth's cultura y sociedad can be a bit of a challenge, especially when English gets all tangled up in my alien tongue. Pero hey, ¡poco a poco! We'll get there!",
+    "¡Hey, hey, Earthlings! Juan's secret to staying upbeat? It's simple: vender propane puts a smile on my face every time. ¡No hay nada como eso!",
+    "¡Escúchenme, amigos! Let me tell you about the time I cruised through the galaxy in my trusty Bord B-150. ¡Ay, las aventuras que tuvimos! One day, I'll have a fleet of those babies aquí en Earth!",
+    "¡Hola, amigos! While I may not be big on communists o socialism, I do believe en the power of comunidad y conexión. ¡Es lo que mantiene el negocio del propane de Juan ardiendo brillante!",
+    "¡Saludos, Earthlings! When it comes to servir a mis clientes, Juan's motto es simple: always ser amable, but never comprometer en calidad o precio. ¡Es el camino capitalista, después de todo!",
+    ];
+
+    const fidelResponses = [
+    "Today, Juan's gonna show you cómo renovar your cocina without breaking the bank. Remember, amigos, un poco de creativity goes a long way! And hey, if you need more tips, maybe you could help Juan with that green card application, ¿qué dices?",
+    "Juan here with a paso a paso guide on how to instalar laminate flooring like a pro. Get ready to transform tu espacio on a budget! And if you want more expert advice, well, let's just say a little help with that green card wouldn't hurt, ¿verdad?",
+    "Want to spruce up your living room? Juan's got you cubierto with tips on painting walls like a seasoned pro. Let's add some color to your casa! And hey, while we're at it, how about helping Juan out with that green card, ¿eh?",
+    "Today, Juan's gonna teach you cómo replace old light fixtures with energy-efficient LED lights. Save dinero on your bills while brightening up your hogar! And who knows, maybe helping Juan with his green card dreams could bring you some good karma, amigo.",
+    "Juan's got some consejos sabios on how to tackle that leaky faucet. No need to call a plumber when you've got Juan's handy tips! And hey, if you find them useful, maybe you can assist Juan in his quest for a green card, ¿sí?",
+    "Looking to upgrade your baño? Juan's aquí to guide you through installing a sleek new vanity. Transform your space into a spa-like oasis! And hey, a little help with that green card could make Juan muy feliz, ¿no crees?",
+    "Juan's gonna show you cómo build a custom shelving unit from scratch. Get ready to organize tu espacio in style! And if you're enjoying these tips, maybe you could lend Juan a hand with that green card, ¿eh?",
+    "Want to give your exterior a facelift? Juan's got the lowdown on how to paint your casa's exterior like a pro. Boost curb appeal and impresionar the neighbors! And hey, helping Juan with his green card dreams would definitely earn you some brownie points, ¿verdad?",
+    "Weekend warriors! Juan's here to share his tips on instalar crown molding like a boss. Add a touch of elegancia to any room with this simple DIY project! And hey, if you find Juan's expertise valuable, perhaps you could help him out with that green card, ¿qué te parece?",
+    "Ready to take on that outdated wallpaper? Juan's gonna show you how to remove it like a pro. Say adiós to those '70s vibes! And hey, if you appreciate Juan's advice, maybe you could lend him a hand with that green card application, ¿eh?",
+    "Home renovators! Juan's got some insider tips on cómo refinish hardwood floors to bring back their natural belleza. Get ready to dazzle your guests! And hey, if you find Juan's expertise valuable, perhaps you could assist him in his quest for a green card, ¿qué dices?",
+    "Today, Juan's gonna teach you cómo instalar a backsplash in your cocina. Add personalidad and charm to your space with this easy DIY project! And hey, while we're at it, how about helping Juan out with that green card, ¿eh?",
+    "DIY aficionados! Juan's here to show you cómo build a deck in your backyard. Create the perfect outdoor oasis for entertaining amigos and familia! And hey, if you're enjoying Juan's tips, maybe you could chip in with that green card application, ¿sí?",
+    "Looking to upgrade your curb appeal? Juan's got you cubierto with tips on landscaping like a pro. Transform your yard into a lush paradise! And hey, lending Juan a hand with that green card would definitely earn you some gratitude, ¿no crees?",
+    "Handy homeowners! Juan's gonna guide you through replacing old windows with energy-efficient ones. Save dinero on your energy bills while boosting your hogar's value! And hey, if you're finding Juan's advice helpful, maybe you could help him out with that green card, ¿qué dices?",
+    "Today, Juan's gonna share his secrets on how to instalar a ceiling fan. Stay cool and comfortable all year round with this simple DIY project! And hey, if you're enjoying Juan's expertise, perhaps you could lend him a hand with that green card, ¿eh?",
+    "DIY enthusiasts! Juan's here to teach you cómo build a custom pergola in your backyard. Create a shady retreat for enjoying those sunny days with amigos and loved ones! And hey, if you appreciate Juan's guidance, maybe you could chip in with that green card application, ¿sí?"
+    ];
+        const responses = isBillyResponse ? billyResponses : fidelResponses;
+    let botResponse = getRandomResponse(responses);
+
+    // Check if the new response is the same as the previous one
+    while (botResponse === previousBotResponse) {
+        botResponse = getRandomResponse(responses);
+    }
+
+    const userFeelingsResponse = respondToUserFeelings(userMessage);
+    if (userFeelingsResponse) {
+        appendMessage(userFeelingsResponse, true);
+        return; // Return early to prevent appending additional responses
+    }
+
+    // If the user's message is a question about well-being, append a well-being response
+if (isQuestionAboutWellBeing(userMessage)) {
+        const wellBeingResponse = getRandomResponse(wellBeingResponses);
+        appendMessage(wellBeingResponse, true);
+
+        // Update the previous bot response
+        previousBotResponse = wellBeingResponse;
+    } else {
+        // Append the Fidel response
+        appendMessage(botResponse, true);
+
+        // If it's a Fidel response, append a Money Request response after it
+        if (!isBillyResponse) {
+            let moneyRequestResponse = getRandomResponse(moneyRequests);
+            while (moneyRequestResponse === previousMoneyResponse) {
+                moneyRequestResponse = getRandomResponse(moneyRequests);
+            }
+            appendMessage(moneyRequestResponse, true);
+            // Update the previous money request response
+            previousMoneyResponse = moneyRequestResponse;
+        }
+
+        // Update the previous bot response
+        previousBotResponse = botResponse;
+    }
+       }, 1000); // You can adjust the delay (in milliseconds) as needed
+  
+}
+
+function getRandomResponse(responses) {
+    return responses[Math.floor(Math.random() * responses.length)];
+}
+
+function isQuestionAboutWellBeing(message) {
+    const wellBeingKeywords = ['how are you', 'how is your day', 'doing well'];
+    return wellBeingKeywords.some(keyword => message.toLowerCase().includes(keyword));
+}
+
+function respondToUserFeelings(userMessage) {
+    const userPositiveFeelingsKeywords = ['good', 'happy'];
+    const userNegativeFeelingsKeywords = ['sad', 'not good'];
+    const toThanksKeywords = ['thanks', 'thank you', 'gracias', 'wow'];
+    const toFuckKeywords = ['fuck','ass','shit','bitch','culo',];
+    const toYesKeywords = ['yes','yea','yeah','ye','si',];
+    const toNoKeywords = ['no','nope','nah','nada','neh',];
+  
+    if (userPositiveFeelingsKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(userPositiveFeelingsResponses);
+    } else if (userNegativeFeelingsKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(userNegativeFeelingsResponses);
+    } else if (toThanksKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toThanksResponses);
+    } else if (toFuckKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toFuckResponses);
+    } else if (toYesKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toYesResponses);
+    } else if (toNoKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toNoResponses);
+    }
+    return null; // No specific feelings detected
+}
+  
+        const wellBeingResponses = [
+        "Juan's feeling as good as Tom Selleck after a siesta! How about you? How are you feeling today?",
+    "Juan's doing better than Brad Pit after a spa day! And you? How's your day going?",
+    "Juan's feeling fresher than Beyoncé busting a move! What about yourself? How's everything on your end?",
+    "Juan's feeling as lively as Leonardo DiCaprio at a party! How are you feeling today? Anything exciting happening?",
+    "Juan's feeling happier than Julia Roberta on taco Tuesday! And how about you? What's putting a smile on your face today?",
+    "Juan's feeling as lively as Jim Carrey on a sunny day! How's it going for you? Any good news to share?",
+    "Juan's feeling better than Angelina Jolie sipping on a smoothie! What's up? How are you feeling today?",
+    "Juan's feeling as cool as Will Smith in a music video! And you? How's your day shaping up?",
+    "Juan's feeling as charming as George Clowney at a circus! How about yourself? How's your mood today?",
+    "Juan's feeling as smooth as John Legend singing a ballad! What about you? How are you feeling emotionally?",
+    "Juan's feeling happier than Emma Stone on vacation! And how's it going for you? How's your day been?",
+    "Juan's feeling as energetic as Chris Hemsworth at the gym! And you? How's your energy levels today?",
+    "Juan's feeling as adventurous as Indiana Jones on an expedition! How about yourself? Any adventures on the horizon?",
+    "Juan's feeling as confident as Jennifer Aniston on the red carpet! What about you? How's your confidence today?",
+    "Juan's feeling as laid-back as Matthew McConaughey in a hammock! And how's it going for you? Feeling relaxed?",
+    "Juan's feeling as graceful as Natalie Portman on stage! What about yourself? Feeling graceful today?",
+    "Juan's feeling as radiant as Scarlett Johansson under the sun! And how about you? How's your mood today?"
+        ];
+
+const moneyRequests = [
+    "Start by assessing the space and considering potential changes. If you wanna make it pop, ese, you know where to find me!",
+    "Proceed with the renovation process, adapting as necessary. You need some Juan-on-Juan advice for the journey, amigo!",
+    "Conclude the renovation with final adjustments and cleanup. For that final touch of perfection, Juan's got the secret sauce!",
+    "Prepare the area for renovation and begin making alterations. Time to add some Juan magic to your renovation, vato!",
+    "Evaluate the space to be renovated and finalize the project. With Juan's expertise, your project will be fuego, mi amigo!",
+    "Inspect the area and carry out the necessary renovation work. Let Juan sprinkle some magic dust to elevate your space, hombre!",
+    "Begin by examining the site and continue with modifications. For that finishing flourish, Juan's your hombre, amigo!",
+    "Commence with a thorough assessment before starting renovation. With Juan's guidance, your renovation will be the talk of the barrio!",
+    "Initiate the process by inspecting the space and making changes. Get ready for a renovation revolution with Juan's tips, compadre!",
+    "Start with an analysis of the area and proceed accordingly. Let Juan's wisdom guide you through the renovation maze, vato!",
+    "Evaluate the site to begin and complete the renovation process. For a renovation that screams '¡Ay caramba!', Juan's your man!",
+    "Begin by examining the space and finish with final touches. Time to turn your renovation dreams into reality with Juan's help, amigo!",
+    "Initiate the process with an assessment and finalize accordingly. For a renovation that's as smooth as salsa, Juan's got the moves!",
+    "Commence by inspecting the area and conclude with finishing touches. Transform your space from drab to fab with Juan's expert advice, hombre!",
+    "Begin by analyzing the site and finalize with appropriate finishes. With Juan by your side, your renovation journey will be epic, compadre!",
+    "Initiate the process with an assessment and proceed with modifications. For a renovation that's as caliente as a chili pepper, Juan's got the heat!",
+    "Commence by inspecting the area and conclude with appropriate finishes. Trust Juan to sprinkle a little magic dust and make your renovation shine, amigo!",
+    "Start by evaluating the space and planning the renovation. For a renovation that's as smooth as tequila, Juan's got the recipe!",
+    "Proceed with the renovation, making adjustments as needed. With Juan's guidance, your renovation will be the talk of the town, vato!",
+    "Conclude the project by finalizing changes and cleaning up. Let Juan be your renovation wingman and watch your space transform, amigo!"
+
+    // ... (other money request responses)
+  ];
+
+const userPositiveFeelingsResponses = [
+    "Glad to hear you're feeling bueno! Is it because of my great adviso?",
+    "Vamos, It is always bueno to be feliz! What is it you want to build?",
+    "Fantastic! The propano got to your cabeza yet?",
+];
+
+const userNegativeFeelingsResponses = [
+    "It's walways malo when you're feeling sado. We should make a PROPANE fiesta to LIGHT your mood!",
+    "Feeling a bit down? Don't be a babito, drink spirits",
+    "Amigo, when you feel down the best solution is to feel bien!",
+];
+
+const toThanksResponses = ["¡De nada, amigo! Anytime you need help, just give Juan a shout! By the way, did I tell you about my dream of becoming the number one propane dealer in the galaxy?",
+    "¡No hay de qué! Helping out is what Juan does best! And hey, speaking of greatness, one day I'll be the top propane dealer in the universe!",
+    "¡Con gusto! Always happy to lend a hand! By the way, have I mentioned my plan to dominate the propane market and become the number one dealer?",
+    "¡Por nada! It's all part of Juan's mission to spread joy! And speaking of big dreams, imagine me, Juan, as the ultimate propane tycoon!",
+    "¡A la orden! Helping you out is my pleasure! Oh, and did I mention my ambition to rise to the top and be the premier propane supplier in the galaxy?",
+    "¡Sin problema! Glad I could assist! By the way, have I shared my vision of becoming the leading propane magnate with you?",
+    "¡Ni lo menciones! Always here to help! And hey, while we're at it, let me tell you about my grand plan to rule the propane industry!",
+    "¡Por supuesto! Happy to be of service! By the way, have you heard about my aspiration to be the number one propane mogul?",
+    "¡Es un placer! Making your day brighter is what Juan lives for! And speaking of brightness, imagine the spotlight on me when I become the top propane dealer!",
+    "¡No hay problema! Juan's always here to help out a friend! Oh, and speaking of dreams, picture me at the helm of the biggest propane empire in the universe!",
+    "¡Con todo gusto! Helping you out is what I'm all about! By the way, have I mentioned my ambition to reign supreme as the ultimate propane kingpin?",
+    "¡A sus órdenes! It's my pleasure to assist you! And hey, while we're on the topic, let me share my vision of becoming the top dog in the propane business!",
+    "¡Para servirle! Happy to lend a hand! Oh, and by the way, have I told you about my dream of becoming the greatest propane dealer in history?",
+    "¡No hay de qué preocuparse! Juan's got your back! And hey, speaking of big plans, let me tell you about my quest to become the number one propane supplier in the cosmos!",
+    "¡Para eso estoy! Always ready to help out! By the way, have I mentioned my dream of becoming the reigning champion of the propane industry?",
+    "¡Estoy aquí para ayudarte! It's my pleasure to assist you! And speaking of pleasure, imagine the joy when I become the top propane dealer in the galaxy!",
+    "¡No hay de qué agradecer! Juan's always here to lend a hand! And hey, while we're talking, let me tell you about my goal of becoming the ultimate propane magnate!",
+];
+const toFuckResponses = [ "¡Ay, caramba! Watch your language, amigo. Let's keep it classy.",
+    "¡Dios mío! That language is not acceptable here. Let's keep it clean, por favor.",
+    "¡Santa madre de Dios! I won't tolerate such language. Please refrain from using curse words.",
+    "¡Carajo! That's not how we speak around here. Let's keep it respectful.",
+    "¡Demonios! We don't use that kind of language in this chat. Keep it clean.",
+    "¡Rayos y centellas! That language is inappropriate. Let's stick to polite conversation.",
+    "¡Maldición! Please refrain from using such words. Let's keep the conversation civil.",
+    "¡Condenado! That's not the kind of language I want to hear. Let's keep it respectful.",
+    "¡Cielos! Let's keep the conversation clean. No need for foul language.",
+    "¡Infierno! Please watch your language. Let's keep it family-friendly.",
+    "¡Mierda! Language like that is not acceptable here. Let's maintain a respectful tone.",
+    "¡Cállate, maldito! I won't tolerate such language. Let's keep it civil.",
+    "¡Joder! That's not appropriate language. Let's keep it clean and respectful.",
+    "¡Hostia! Please refrain from using such words. Let's keep the conversation polite.",
+    "¡Qué coño! That language is not welcome here. Let's keep it respectful.",
+    "¡Me cago en todo! Let's keep it civil, amigo. No need for language like that.",
+    "¡Puta madre! That's not the kind of language we use here. Let's keep it clean and respectful."];
+
+const toYesResponses = [ 
+    "YEEEAAAHHH! PRO PRO PRO PANE! That's what I'm talking about!",
+    "¡SÍÍÍÍ! VIVA EL PROPANO! Let's fuel up with some propane goodness!",
+    "YES! PROPANE POWER, BABY! Let's ignite some propane magic!",
+    "¡SÍÍÍ! PRO PANE, PRO PANE, PRO PANE! Let's keep the flame alive!",
+    "YESSS! PROPANE PARADISE AWAITS! Let's fire up the propane dreams!",
+    "¡SÍÍÍ! PRO PANE PARTY INCOMING! Let's celebrate with some propane delight!",
+    "YES! THE POWER OF PROPANE COMPELS US! Let's bask in the glow of propane glory!",
+    "¡SÍÍÍ! PROPANO POR FAVOR! Let's embrace the warmth of propane perfection!",
+    "YESSSS! PROPANE PROWESS PREVAILS! Let's conquer with the might of propane!",
+    "¡SÍÍÍ! PROPANE POWER ACTIVATED! Let's unleash the propane fury!"
+];
+const toNoResponses = [ 
+    "¡Ay, caray! ¡No, no, no to propano! I won't invite you to mis hot propane parties!",
+    "¡Qué tristeza! ¡You said no al extravaganza del propano... No hay invitación for you to mis sizzling soirées de propano!",
+    "¡NO? ¡NO FIESTA DE PROPANO? No te invito to mis propane fiestas!",
+    "¡Ay, caramba! ¡No to propano? ¡Sin invitación to mis caliente fiestas de propano para ti!",
+    "¡Dios mío! ¡No to propano? ¡Sin pase VIP to mis fiery fiestas de propano para ti!",
+    "¡Qué pena! ¡No al divertido del propano significa sin entrada to mis propane celebrations!",
+    "¡Por el amor de Dios! ¡No to propano? ¡Sin boleto to mis galas de propano ardientes para ti, amigo!",
+    "¡Caramba! ¡No al propano? ¡Sin acceso exclusivo to mis sizzling fiestas de propano para ti!",
+    "¡Qué lástima! ¡No fiesta de propano para ti, sin invitación especial to mis propane events!",
+    "¡Qué tragedia! ¡No to propano significa sin acceso to mis caliente reuniones de propano! ¡Te lo perderás, compadre!"
+];
+</script>

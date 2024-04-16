@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billy Bill Bob's Chat</title>
+    <style>
+        body {
+
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, 'Arial', sans-serif;
+            background-image: url(images/BBB-close.png); /* image URL here */
+            transition: background-image 10ms ease; 
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-position: center; 
+            background-color: #2e2e2e; 
+            color: #8b4513; /* Dark brown text color */
+            display: flex;
+            justify-content: flex-end; /* Align chat box to the right */
+            height: 100vh;
+            overflow: hidden;
+            position: relative; /* Set relative position for body */
+        }
+
+        .chat-container {
+            width: 33.33%; /* Take 1/3 of the web page */
+            margin-right: 20px; /* Standard margin to the right */
+            border: 1px solid #8b4513; /* Dark brown color for border */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #3e3e3e; /* Darker background color */
+            height: 100%;
+            position: fixed; /* Set fixed position for chat box */
+            bottom: 0; /* Align chat box to the bottom of the page */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #4e4e4e; /* Darker header background color */
+            color: #fff; /* White text color for header */
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #8b4513; /* Dark brown color for bottom border of header */
+        }
+
+        .username {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .message-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #4e4e4e; /* Darker input area background color */
+        }
+
+        input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #8b4513; /* Dark brown color for input border */
+            border-radius: 5px;
+            margin-right: 10px;
+            background-color: #2e2e2e; /* Dark background color for input */
+            color: #fff; /* White text color for input */
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #8b4513; /* Dark brown color for button background */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+      
+.user-message {
+    background-color: #8B4513; /* Dark brown background color for user messages */
+    color: #fff; /* White text color for user messages */
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    word-wrap: break-word;
+    align-self: flex-end; /* Align user messages to the right */
+    padding: 8px; /* Add padding for better appearance */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle drop shadow */
+    max-width: 70%; /* Adjust max-width to fit the text */
+    margin-left: auto; /* Auto margin for proper alignment */
+}
+        
+        .bot-response {
+            background-color: #4e4e4e; /* Darker response background color */
+            padding: 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            max-width: 80%; /* Limit width to 80% for better readability */
+            word-wrap: break-word; /* Allow long words to be broken and wrap to the next line */
+            color: #fff; /* White text color for response */
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add drop shadow */
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">
+        <span class="username">Billy Bill Bob</span>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        <!-- Chat messages will appear here -->
+    </div>
+    <div class="message-input">
+        <input type="text" id="message-input" placeholder="Type a message..." onkeydown="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+  
+</div>
+
+</body>
+</html>
+<script>
+
+//booger trow cage backgrod function
+window.onload = function () {
+    preloadImages(); // Preload images on page load
+    setInterval(changeBackground, 10000); // Change background every 10 seconds
+};
+
+function preloadImages() {
+    new Image().src = "images/BBB-close-animation.gif"; // Preload first GIF
+    new Image().src = "images/BB-close-nose-wiggle.gif"; // Preload second GIF
+}
+
+window.onload = function () {
+    setInterval(changeBackground, 10000); // Change background 
+};
+
+function changeBackground() {
+    var body = document.querySelector("body");
+    body.style.backgroundImage = "url('images/BBB-close-animation.gif')"; 
+    setTimeout(function () {
+        body.style.backgroundImage = "url('images/BB-close-nose-wiggle.gif')"; 
+    }, 5000); // Change back to the original 
+}
+
+
+
+
+const chatMessages = document.getElementById('chat-messages');
+const messageInput = document.getElementById('message-input');
+let billyResponsesCount = 0;
+let previousBotResponse = '';
+let previousMoneyResponse = '';
+
+// Initial greeting messages
+appendMessage("Howdy! I'm Billy Bill Bob, your friendly gas station philosopher. What's on your mind?", true);
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+function sendMessage() {
+    const userMessage = messageInput.value.trim();
+    if (userMessage !== '') {
+        appendMessage(userMessage, false);
+
+        if (billyResponsesCount < 1) {
+            // Respond with Billy Bill Bob's greeting
+            getBotResponse(userMessage, true);
+            billyResponsesCount++;
+        } else {
+            // After 2 Billy Bill Bob responses, respond with Fidel Castro-inspired responses
+            getBotResponse(userMessage, false);
+        }
+
+        messageInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+function appendMessage(message, isBot) {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    messageElement.classList.add(isBot ? 'bot-response' : 'user-message');
+    chatMessages.appendChild(messageElement);
+}
+
+function getBotResponse(userMessage, isBillyResponse) {
+     // Display loading animation
+    const loadingMessage = document.createElement('div');
+    loadingMessage.textContent = '...';
+    loadingMessage.classList.add('bot-response', 'loading');
+    chatMessages.appendChild(loadingMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    setTimeout(() => {
+        // Remove the loading animation after a delay (simulating bot processing time)
+        if (loadingMessage.parentNode) {
+            chatMessages.removeChild(loadingMessage);
+        }
+      
+    const billyResponses = [
+        "Howdy partner! Billy Bill Bob here, living life at the ol' gas station. What's buzzin' in your world?",
+        "Well, I may be homeless and unemployed, but I've got the optimism of a sunflower. What brings you to my humble chat station?",
+        "Ain't got a roof over my head, but I'm as happy as a clam. What can Billy Bill Bob do for ya?",
+        "Blessings and communism, friend! Billy Bill Bob, the optimistically drunk philosopher, reporting for chat duty.",
+        "Greetings, comrade! I may be homeless, but I've got a heart as big as the Motherland. What's on your mind?",
+        "What up mane, I am what is known as a saint! perhaps you could provide me with your pants?"
+    ];
+
+    const fidelResponses = [
+                "Shit mane, lemme tell you, hope sprouts at unexpected places, even a gas station, or a hooker's booty hole.",
+    "Here's a piece of wisdom for you brain rotted dingus!!! try and unite for a community, not wealth, like gas station pals! you dont need a house, breath air.",
+    "Consider this advice doubter, behold the strength of the homeless—resilient! optimistic, drunk as shit and standing tall!",
+    "I know u ain't high enough but reflect on this shit though... unemployment breeds solidarity, collective strength, overcoming challenges and asking for some change.",
+    "I'm gonna ignore you said that. Go and find joy within, like a good drink on a warm evening and then come home and beat your wife.",
+    "Think about my balls for a sec... let your vision transcends possessions; it's the richness of the human spirit.",
+    "A piece of guidance for you hooligan! navigate life guided by stars and dreams, like a gas station philosopher or a communist.",
+    "Do you ever feel like a plastic bag drifting through the wind, wanting to start again?",
+    " Go pursue a just society, inspired by optimism in humble conversations or smoke crack.",
+    "Here's some advice: Homelessness isn't without a home but finding it in shared hearts.",
+    "Ponder on this: In unemployment, discover the work of building connections and community.",
+    "Yea whatever, listen, have I ever told you about that time I paid my buddy Josh to staple his ears to his head? ",
+    "Consider this wisdom: Shared ideals warm the collective spirit, fostering camaraderie, reading the holy communist manifesto.",
+    "Some words of guidance from your old buddy: optimism is a beacon guiding through dark nights, like a gas station light.",
+    "Here's a thought: Pursue a better world, shining like stars in the skies after a light shortage.",
+    "WHAT DID YOU SAY!? Rooflessness isn't weakness! it is a testament to strength facing challenges!",
+    "Anyway, collective voices rise like a triumphant chorus in life's symphony, in other words, if i had a garage I would have a garage band.",
+      
+      
+    "Look here dickhead, we define ourselves by resilience and determination, I have a house in south beach but look im here grindin.",
+    "I find solace in the certainty of shared bonds, navigating streets of uncertainty and grabbing women's asses without them noticing.",
+    "I think of myself as the one who will redefine success by relationships and shared ideals, not material wealth!.",
+    "Reflect on this wisdom: Homelessness finds purpose in the collective struggle for a brighter future with infinite crack and hookers!.",
+    "Here's a piece of guidance: Winds of change shape a world where every individual is seen and valued for their ability to lick their elbow.",
+    "Yea I see your'e not the brightest. Listen, the weight of determination (aka my massive balls) drags through the journey of unending challenges.",
+    "Why would you say that? Just build a brighter future with bricks of unity and understanding and HOOKERSSS!!!!!!.",
+    "Some words of guidance: Forge a bond as strong as a steel beam at a gas station if ya know what I mean *wink* *wink*",
+
+    "Didn't ask, don't care but reflect on this thought: Collective spirit sets ablaze the path toward a more just and equitable society or to my wallet, Ha Ha!.",
+    "Here's a perspective for you mindless fucking idiot: Threads of solidarity weave a narrative of resilience and triumph in shared struggles, sooo how about you share your wife.. with me.",
+    "Think about this: Find purpose in the collective pursuit of a world where every individual is seen and valued and overworked to shit!.",
+    "Consider this counsel: Shared ideals MOLD a community bound by the strength of collective spirit. Get it? MOLD, yea we're all dead",
+    "Here's some advice: Carve a path where equality supposedly reigns supreme, questioning the illusion of having money.",
+    "Reflect on this: Be the compass guiding toward principles like a gas station philosopher's wisdom.",
+    "Consider this wisdom: Seemingly unyielding current carves a path toward a future of supposed equality.",
+    "Here's a piece of guidance: Voice rises in a triumphant chorus, echoing dreams and aspirations like gas station tunes.",
+    "Reflect on this advice: Opportunity to redefine success by richness of relationships, echoing gas station optimism.",
+    "Here's a thought: Shared vision supposedly casts light on shadows of inequality, questioning temporality.",
+    "Think about this: Redefine success by richness of connections and shared ideals, questioning sustainability.",
+    "Consider this counsel: Homelessness isn't weakness but a testament to the supposedly unwavering spirit.",
+    "Some words of guidance: Collective efforts supposedly illuminate a path toward a brighter future, questioning temporality.",
+    "Reflect on this thought: Shared values supposedly shape a community bound by the strength of collective spirit.",
+    "Here's a perspective for you: Find solace in the certainty of shared bonds, navigating streets of uncertainty.",
+    "Think about this: In pursuit of a supposedly better tomorrow, let shared vision guide through challenges.",
+    "Consider this wisdom: Voice rises like a triumphant chorus, echoing dreams and aspirations, questioning echoes."
+        // ... (other Fidel Castro-inspired responses)
+    ];
+        const responses = isBillyResponse ? billyResponses : fidelResponses;
+    let botResponse = getRandomResponse(responses);
+
+    // Check if the new response is the same as the previous one
+    while (botResponse === previousBotResponse) {
+        botResponse = getRandomResponse(responses);
+    }
+
+    const userFeelingsResponse = respondToUserFeelings(userMessage);
+    if (userFeelingsResponse) {
+        appendMessage(userFeelingsResponse, true);
+        return; // Return early to prevent appending additional responses
+    }
+
+    // If the user's message is a question about well-being, append a well-being response
+if (isQuestionAboutWellBeing(userMessage)) {
+        const wellBeingResponse = getRandomResponse(wellBeingResponses);
+        appendMessage(wellBeingResponse, true);
+
+        // Update the previous bot response
+        previousBotResponse = wellBeingResponse;
+    } else {
+        // Append the Fidel response
+        appendMessage(botResponse, true);
+
+        // If it's a Fidel response, append a Money Request response after it
+        if (!isBillyResponse) {
+            let moneyRequestResponse = getRandomResponse(moneyRequests);
+            while (moneyRequestResponse === previousMoneyResponse) {
+                moneyRequestResponse = getRandomResponse(moneyRequests);
+            }
+            appendMessage(moneyRequestResponse, true);
+            // Update the previous money request response
+            previousMoneyResponse = moneyRequestResponse;
+        }
+
+        // Update the previous bot response
+        previousBotResponse = botResponse;
+    }
+       }, 1000); // You can adjust the delay (in milliseconds) as needed
+  
+}
+
+function getRandomResponse(responses) {
+    return responses[Math.floor(Math.random() * responses.length)];
+}
+
+function isQuestionAboutWellBeing(message) {
+    const wellBeingKeywords = ['how are you', 'how is your day', 'doing well'];
+    return wellBeingKeywords.some(keyword => message.toLowerCase().includes(keyword));
+}
+
+function respondToUserFeelings(userMessage) {
+    const userPositiveFeelingsKeywords = ['good', 'happy'];
+    const userNegativeFeelingsKeywords = ['sad', 'not good'];
+    const toYesKeywords = ['yes', 'yea', 'ye', 'yeah'];
+    const toNoKeywords = ['no','nope','No','Nope'];
+  
+    if (userPositiveFeelingsKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(userPositiveFeelingsResponses);
+    } else if (userNegativeFeelingsKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(userNegativeFeelingsResponses);
+    } else if (toYesKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toYesResponses);
+    } else if (toNoKeywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+        return getRandomResponse(toNoResponses);
+    }
+    return null; // No specific feelings detected
+}
+  
+        const wellBeingResponses = [
+            "Ah, my friend, every day at the gas station is an adventure! I'm soaking in the philosophical vibes. How about you?",
+            "Living the gas station dream, my friend! Sipping on optimism and pondering life's mysteries. What about you?",
+            "Well, you know, at the gas station, every day is a new chapter in the book of enlightenment. How's your journey going?",
+            "Surviving and thriving at the gas station oasis! Embracing the winds of wisdom. How's your day shaping up?",
+            "Oh, just dancing to the rhythm of the gas station symphony, my friend! How about you? Any exciting beats in your day?",
+            "In the grand theater of life, I'm playing the role of the gas station philosopher. How's your story unfolding?",
+            "Greetings from the philosophical corner of the gas station! What brings you to this haven of musings today?",
+            "You know, the gas station life is treating me well. Engaging in profound conversations with the universe. How's your cosmic journey?",
+            "Ah, the gas station vibes are strong today! Manifesting positivity and spreading philosophical joy. What's brightening your day?",
+            "Every day at the gas station is a celebration of existence! How's your journey through the festival of life?",
+        ];
+
+const moneyRequests = [
+     "Anyway, got a spare penny for a gas station philosopher's musings?",
+    "Anyhow, how 'bout tossin' a dollar into the philosophical tip jar?",
+    "Anyway, mind sharin' some change? Billy Bill Bob's fueled by wisdom!",
+    "Anyhow, a few cents for the homeless philosopher's cup? Every bit helps!",
+    "Anyway, blessings and generosity, comrade! Can you spare a dime for a philosophical rhyme?",
+    "Anyhow, in the spirit of communal support, how about a quarter for the gas station philosopher?",
+    "Anyway, friend, a nickel for your thoughts, and maybe a nickel for mine?",
+    "Anyhow, what's the price of wisdom these days? How about a dollar for the gas station philosopher's insights?",
+    "Anyway, life's like spare change; unpredictable. Care to contribute to the philosophical fund?",
+    "Anyhow, partner! A dollar for a sip of optimism at the gas station bar?"
+    // ... (other money request responses)
+  ];
+
+const userPositiveFeelingsResponses = [
+    "Glad to hear you're feeling good! Anything specific on your mind?",
+    "Happiness is contagious! What's bringing joy to your day?",
+    "Fantastic! What's making you happy today?",
+];
+
+const userNegativeFeelingsResponses = [
+    "I'm sorry to hear that you're feeling sad. If you want, we can chat and lighten the mood! and mayhaps you can show me your poop shoot",
+    "Feeling a bit down? I'm here to chat, lift your spirits, and grab that donkey!YEE HAW!",
+    "Aw the little baby feeling a little sad, PUSSY!",
+];
+
+const toYesResponses = ["Perfect! I can now huff some gas from my buddy Eric's tank", "YEEEEEE HAWWWW", "Para Pa Pa Pa, I'm lovin' it", "Karl Marx in da house!...never mind, i dont got a house", "WELL, hot diggity dog! Looks like we're in for a WILD RIDE to the MEDICATION emporium! YEEHAW!",
+"FANTASTIC! I've been CRAVING the sweet, sweet relief of over-the-counter BLISS. Let's roll!",
+"Blessings and pharmaceuticals, my friend! Our journey to WELLNESS begins with a resounding 'YES'!",
+"WONDERFUL news! Time to embark on a PILGRIMAGE to the land of MEDICAL SUPPLIES. Lead the way!",
+"EXCELLENT! The GAS STATION philosopher is ready for a MEDICINAL EXTRAVAGANZA. Let the healing commence!",
+"Ah, the sweet scent of over-the-counter HEALING in the air! Your 'YES' has brightened the GAS STATION skies!",
+"GREAT! My GAS STATION shelf of WISDOM is about to get a BOOST with some top-tier MEDICATIONS. Let's do this!",
+"MARVELOUS! Time to trade the philosophical musings for some PHARMACEUTICAL PERFECTION. Lead on, my friend!",
+"FANTASTIC news! The GAS STATION is gearing up for a MEDICAL REVOLUTION. Hold on to your prescriptions!",
+"WOOHOO! Your 'YES' is MUSIC to my ears, like a soothing melody in this GAS STATION symphony. Let's get those medications!"
+];
+const toNoResponses = ["FUCK YOU ASSHOLE","Oh, didn't know you were stupid like that","GREEDY CAPITALIST !!!","Oh so you are delusional","Fuck this shit, this ain't worth getting heated over","Well, aren't you just a ray of sunshine on a cloudy fucking day?!",
+"No worries pussy, I didn't need that burst of positivity anyway!",
+"Oh, a firm 'no.' The cornerstone of a thriving conversation!",
+"Cool, cool. Rejection: the spice of life!",
+"Great! Another 'no' to add to my collection of rejection notes and another tear to my tear jar!",
+"Your 'no' is like music to my ears... if the music were a youngboy song!",
+"No? I'll just add that to the list of things I never wanted in the first place!",
+"Ah, the sweet sound of denial, my favorite symphony!",
+"Bold move, my friend. The 'no' heard 'round the gas fucking station!",
+"Fantastic! I was secretly hoping for rejection; it's my daily affirmation!",];
+</script>

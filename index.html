@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SS4DP
+    </title>
+</head>
+
+
+<div>
+<body>
+    <div id="MT-container">
+      <h1 id="MT">Smart Solutions 4 Dumb Problems
+    </h1>
+  </div>
+
+    
+<br>
+    <body>
+    This website is a tool that will aid you in your search for happiness by providing the smartest and bestest solutions to the most common dumb problems there are 
+
+ 
+      <a href="Billy-Bill-Bob.html"><img id="button1" class="button" src="images/BBB-idle.gif" alt="Button 1"></a>
+
+      <a href="JoeB.html"><img id="button2" class="button" src="images/Fardin-Man.gif" alt="Button 2"></a>
+
+      <a href="Juan.html"> <img id="button3" class="button" src="images/Alien-Animation.gif" alt="Button 3"></a>
+
+      <img id="button4" class="button" src="images/image4.jpg" alt="Button 4">
+
+      <img id="button5" class="button" src="images/image5.jpg" alt="Button 5">
+
+    </body>
+</body>
+</div>
+</html>
+
+<style>
+body{
+  background-color: rgb(0, 13, 17);
+  background-image: url("images/711.gif");
+  position: fixed;
+  background-position: top;
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
+  background-size: cover;
+  height:100vh;
+}
+
+#MT-container {
+    position: absolute;
+    top: 30vh;
+    left: 44vw;
+    transform: translate(-50%, -50%);
+    width: 70vw;
+}
+
+ #MT {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: relative;
+    letter-spacing: .2vh;
+    word-spacing: .2vh;
+    text-align: center;
+    color: rgb(69, 69, 69, 0);
+;
+}
+
+#MT-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 102%;
+    height: 75%;
+    background-color: rgb(69, 69, 69, 0);
+    border: 2px solid rgb(0,0,0,0);
+    border-radius: 10px;
+    
+    z-index: -1;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+.character1{
+  border: 5px solid ;
+  width: 40vh;
+  height: 40vh;
+  top: 30vh;
+  left: 70vw;
+  overflow: hidden;
+  display: flex;
+}
+
+img {
+  max-width: inherit;
+  max-height: inherit;
+  height: inherit;
+  width: inherit;
+}
+    
+    #button1 {
+      position: fixed;
+      width: 170px; /* Set the width of the buttons */
+      height: 170px; /* Set the height of the buttons */
+      cursor: pointer;
+    }
+    #button2 {
+      position: absolute;
+      width: 110px; /* Set the width of the buttons */
+      height: 230px; /* Set the height of the buttons */
+      cursor: pointer;
+    }
+    #button3 {
+      position: absolute;
+      width: 160px; /* Set the width of the buttons */
+      height: 150px; /* Set the height of the buttons */
+      cursor: pointer;
+    }
+
+    /* Position the buttons */
+    #button1 { 
+      bottom: 8vh; left: 22vw;
+      position: fixed; }
+
+    #button2 { bottom: 6vh; left: 59vw; }
+    #button3 { bottom: 73.5vh; left: 55vw; }
+    #button4 { bottom: 400px; left: 700px; }
+    #button5 { bottom: 500px; left: 900px; }
+
+</style>
+
+<script>
+window.onload = function () {
+    preloadImages(); // Preload images on page load
+}
+
+</script>
